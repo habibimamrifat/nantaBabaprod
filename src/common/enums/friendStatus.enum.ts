@@ -1,0 +1,7 @@
+export enum FriendStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DELETED = 'DELETED',
+  BLOCKED = 'BLOCKED',
+  UNFRIEND = 'UNFRIEND',
+}

@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ================= USER =================
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  googleId String @unique
+
+  friendRequestReceived Friends[]            @relation("ReceivedFriendRequest")
+  friendRequestSent     Friends[]            @relation("SendFriendRequest")
+  conversationMembers   ConversationMember[]
+  eachMessages          EachMessage[]
+  messageSeenBies       MessageSeenBy[]
+}
+
+//===================make relation (friend)++++++++=++++++++
+
+model Friends {
+  id String @id @default(cuid())
+
+  requestingUserId String
+  requestingUser   User   @relation("SendFriendRequest", fields: [requestingUserId], references: [id])
+
+  requestedUserId String
+  requestedUser   User   @relation("ReceivedFriendRequest", fields: [requestedUserId], references: [id])
+
+  relationStatus FriendStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+
+  @@unique([requestingUserId, requestedUserId])
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  DELETED
+  BLOCKED
+  UNFRIEND
+}
+
+//1 user may have many conversation =============++++++++
+
+model Conversation {
+  id String @id @default(cuid())
+
+  conversationType     ConversationTypeEnum @default(PERSONAL)
+  conversationMember   ConversationMember[]
+  conversationMessages EachMessage[]
+
+  createdAt DateTime @default(now())
+}
+
+model ConversationMember {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+
+  userRole ConversationMemberRoleEnum @default(EQUALS)
+}
+
+model EachMessage {
+  id String @id @default(cuid())
+
+  senderId String
+  sender   User   @relation(fields: [senderId], references: [id])
+
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+
+  seenBy MessageSeenBy[]
+
+  sendAt DateTime @default(now())
+}
+
+model MessageSeenBy {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  eachMessageId String?
+  eachMessage   EachMessage? @relation(fields: [eachMessageId], references: [id])
+
+  seenAt DateTime @default(now())
+}
+
+enum ConversationMemberRoleEnum {
+  ADMIN
+  MEMBER
+  OWNER
+  EQUALS //THIS ID FOR PRIVATE CONVERSATION
+}
+
+enum ConversationTypeEnum {
+  PERSONAL
+  GROUP
+  REQUESTED
+}
