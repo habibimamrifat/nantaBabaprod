@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { HashingAbstract } from './hasingAbstract';
 import { BcryptFunctions } from './bcryptFunctions';
 
+@Global()
 @Module({
   providers: [
     {

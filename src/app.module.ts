@@ -8,6 +8,9 @@ import { ConfigImportModule } from './common/mods/configImport.module';
 import { TSDocImportModule } from './common/mods/tsdocImpoer.module';
 import { SendResponseModule } from './common/helpers/responseHelper/respomseHendeller.module';
 import { AuthModule } from './module/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessGuard } from './common/guard/access.guard';
+import { AuthenticationGuard } from './common/guard/authentication.guard';
 
 @Module({
   imports: [
@@ -17,8 +20,17 @@ import { AuthModule } from './module/auth/auth.module';
     PrismaModule,
     UserModule,
     AuthModule,
+    // BcryptImportModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    AuthenticationGuard,
+    {
+      provide: APP_GUARD,
+      useClass: AccessGuard,
+    },
+  ],
 })
 export class AppModule {}
