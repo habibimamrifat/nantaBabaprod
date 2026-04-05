@@ -18,7 +18,7 @@ model User {
   friendRequestSent     Friends[]            @relation("SendFriendRequest")
   conversationMembers   ConversationMember[]
   eachMessages          EachMessage[]
-  messageSeenBies       MessageSeenBy[]
+  messageSeenBys      MessageSeenBy[]
 }
 
 //===================make relation (friend)++++++++=++++++++
