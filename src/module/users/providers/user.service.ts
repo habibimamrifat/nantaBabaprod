@@ -78,4 +78,15 @@ export class UserService {
       );
     }
   }
+
+  public async findAllUsers(user: any) {
+    console.log('this user is trying to see all the user ==>>', user);
+    const allUsers = await this.prisma.user.findMany();
+
+    return this.sendResponse.success(
+      HttpStatus.FOUND,
+      'all the users founded',
+      allUsers,
+    );
+  }
 }

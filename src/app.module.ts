@@ -11,6 +11,7 @@ import { AuthModule } from './module/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessGuard } from './common/guard/access.guard';
 import { AuthenticationGuard } from './common/guard/authentication.guard';
+import { FriendsModule } from './module/firends/friends.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthenticationGuard } from './common/guard/authentication.guard';
     PrismaModule,
     UserModule,
     AuthModule,
+    FriendsModule,
     // BcryptImportModule,
   ],
   controllers: [AppController],
